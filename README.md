@@ -28,7 +28,9 @@ Create a new branch for each assignment: `assignment-X`. When you're done, creat
   - In the Javascript file, create an array of philosophical questions (you can invent these).
   - Use an event listener on the button to handle clicks.
   - When the button is clicked, retrieve the next question from the array based on its index and insert it into the DOM, in the h2 that says "Your question will appear here (replace this text)".
-  - When the user submits an answer with the "submit answer" button, take the value of the text area, and append the to the list below.
+  - When the user submits an answer with the "submit answer" button:
+    - Take the value of the text area, and append the to the list below.
+    - Make the h2 that contained the question, say: "Click the button for a new question".
 - **Goal:** Understand JavaScript basics and DOM manipulation.
 
 ### Assignment 2: Local Storage Implementation
