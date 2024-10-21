@@ -17,15 +17,18 @@ This repository contains a basic setup - an HTML file that includes:
 
 ✨ Tip! You can skim through the assignments, but don't overwhelm yourself by reading too much into the more advanced assignments right away. You'll be learning new stuff every day, and by the end of this code challenge, you'll have accomplished much more than you think right you're capable of right now!
 
+**For each assignment, create a git branch.** <br/>
+Create a new branch for each assignment: `assignment-X`. When you're done, create a pull request from branch `assignment-X` → `main`, so your code can be reviewed!
+
 ### Assignment 1: Basic JavaScript and DOM Manipulation
 
 - **Task:** Implement all logic in a client-side JavaScript file.
 - **Details:**
-  - Create a Javascript file named "script.js", so it matches the `<script>`'s `src` in the HTML.
+  - In the "frontend" folder, create a Javascript file named "script.js", so it matches the `<script>`'s `src` in the HTML.
   - In the Javascript file, create an array of philosophical questions (you can invent these).
   - Use an event listener on the button to handle clicks.
-  - When the button is clicked, retrieve the next question from the array based on its index and insert it into the DOM.
-  - Include a text field (`<input type="text">`) for user responses, and when the user submits an answer, append it to the list below.
+  - When the button is clicked, retrieve the next question from the array based on its index and insert it into the DOM, in the h2 that says "Your question will appear here (replace this text)".
+  - When the user submits an answer with the "submit answer" button, take the value of the text area, and append the to the list below.
 - **Goal:** Understand JavaScript basics and DOM manipulation.
 
 ### Assignment 2: Local Storage Implementation
