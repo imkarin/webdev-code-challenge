@@ -31,6 +31,7 @@ Create a new branch for each assignment: `assignment-X`. When you're done, creat
   - When the user submits an answer with the "submit answer" button:
     - Take the value of the text area, and append the to the list below.
     - Make the h2 that contained the question, say: "Click the button for a new question".
+    - Make the text area and "submit answer" button disabled
 - **Goal:** Understand JavaScript basics and DOM manipulation.
 
 ### Assignment 2: Local Storage Implementation
