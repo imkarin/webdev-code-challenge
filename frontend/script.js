@@ -92,13 +92,3 @@ function doSomething() {
 
 // - Whenever "Submit Answer" it will transfer a question to the answeredQuestions array even though no question has been
 //   retrived on page load and/or no new question has been retrieved after the previous one.
-
-// TASKS FOR TODAY
-
-// X Right now, your code keeps appending <li>s to the <ul> every time you submit an answer. You're probably gonna wanna empty the <ul> before running the loop that adds the <li>s.
-
-// X After you added those <li>s, you're gotta reset the H2 with the question to: "Click the button for a new question".
-
-// X Disable the "submit answer" button (so that the user can't send an answer before generating a new question).
-
-// X Make sure to re-enable the "submit answer" button after you have generated a new question. :-)
