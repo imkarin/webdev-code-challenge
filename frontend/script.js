@@ -57,15 +57,26 @@ function doSomething() {
   questions.splice(randomSelector, 1);
   randomSelector = null;
   console.log(questions);
-  for (let i = 0; i < answeredQuestions; i++) {
+  for (let i = 0; i < answeredQuestions.length; i++) {
     const li = document.createElement("li"); // creates the DOM elements
     const header = document.createElement("h4"); // creates the DOM elements\
-    header.textContent = answeredQuestions.question; // provide the value to the variable
+    header.textContent = answeredQuestions[i].question; // provide the value to the variable
     const paragraph = document.createElement("p"); // creates the DOM elements
-    paragraph.textContent = answeredQuestions.answer; // provide the value to the variable
+    paragraph.textContent = answeredQuestions[i].answer; // provide the value to the variable
     li.appendChild(header); // makes the h4 a child to the li
     li.appendChild(paragraph); // makes the p a child to the li
     const ul = document.getElementById("answer-list");
     ul.appendChild(li); // makes the li a child to the ul
   }
 }
+
+// BUGS
+// - "Submit Answer" is able to clicked, resulting in an answer without an accompanying question, being logged
+
+// - "Submit Answer" can be clicked multiple times on the same question
+
+// - Previous Answers that have been submitted, are continually appended when new questions and answered are submitted
+//   Thereby clogging the list with reiterating entries
+
+// - Whenever "Submit Answer" it will transfer a question to the answeredQuestions array even though no question has been
+//   retrived on page load and/or no new question has been retrieved after the previous one.
