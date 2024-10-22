@@ -36,6 +36,8 @@ const submitAnswer = document.getElementById("submit-answer");
 
 const answerField = document.getElementById("answer");
 
+const ul = document.getElementById("answer-list");
+
 let randomSelector = null;
 
 generateBtn.addEventListener("click", generateQuestion);
@@ -47,25 +49,35 @@ function generateQuestion() {
     randomSelector = Math.floor(Math.random() * questions.length);
     questionH2.textContent = questions[randomSelector];
   }
+  submitAnswer.disabled = false;
+  generateBtn.disabled = true;
 }
 
 function doSomething() {
   const question = questions[randomSelector];
   const answer = answerField.value;
   const pair = { question: question, answer: answer };
+
   answeredQuestions.push(pair);
   questions.splice(randomSelector, 1);
   randomSelector = null;
   console.log(questions);
+  ul.innerHTML = " ";
+  questionH2.textContent = " Click the button for a new question ";
+  submitAnswer.disabled = true;
+  generateBtn.disabled = false;
+
   for (let i = 0; i < answeredQuestions.length; i++) {
     const li = document.createElement("li"); // creates the DOM elements
+
     const header = document.createElement("h4"); // creates the DOM elements\
     header.textContent = answeredQuestions[i].question; // provide the value to the variable
+
     const paragraph = document.createElement("p"); // creates the DOM elements
     paragraph.textContent = answeredQuestions[i].answer; // provide the value to the variable
+
     li.appendChild(header); // makes the h4 a child to the li
     li.appendChild(paragraph); // makes the p a child to the li
-    const ul = document.getElementById("answer-list");
     ul.appendChild(li); // makes the li a child to the ul
   }
 }
@@ -80,3 +92,13 @@ function doSomething() {
 
 // - Whenever "Submit Answer" it will transfer a question to the answeredQuestions array even though no question has been
 //   retrived on page load and/or no new question has been retrieved after the previous one.
+
+// TASKS FOR TODAY
+
+// X Right now, your code keeps appending <li>s to the <ul> every time you submit an answer. You're probably gonna wanna empty the <ul> before running the loop that adds the <li>s.
+
+// X After you added those <li>s, you're gotta reset the H2 with the question to: "Click the button for a new question".
+
+// X Disable the "submit answer" button (so that the user can't send an answer before generating a new question).
+
+// X Make sure to re-enable the "submit answer" button after you have generated a new question. :-)
