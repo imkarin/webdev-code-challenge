@@ -49,7 +49,7 @@ Create a new branch for each assignment: `assignment-X`. When you're done, creat
 - **Details:**
   - Instead of getting your questions from a hardcoded array, you'll now be fetching them from an external API.
   - Use the `fetch` API to retrieve a question when the button is clicked:
-    - To fetch a question, you can make a GET-request to the following endpoint: `https://philosophy-api.netlify.app/api/question?id=[number]`, where `[number]` can be replaced, to get a specific question.
+    - To fetch a question, you can make a GET-request to the following endpoint: `https://philosophy-api.netlify.app/api/question?id=[number]`, where the query parameter `id=[number]` can be used to get a specific question.
     - The endpoint will return a response in **text** format.
   - Update the DOM with the fetched question, and make sure the website functions the same as before (list of answers, local storage).
   - You may need to figure out a new way to keep track of the questions that the user has already answered, to avoid fetching the same question twice.
@@ -57,6 +57,21 @@ Create a new branch for each assignment: `assignment-X`. When you're done, creat
 
 ### Assignment 4: Building a Node.js/Express API
 
+#### **Introduction**
+In this section, you'll learn how to use Node.js: a Javascript runtime environment, that allows you to run Javascript code on a computer, outside of the browser. You're going to write your own small server, that will receive requests and return philosophical questions. Your first API!
+
+Setting up Node.js will take some configurations on your computer, to enable your computer to run Javascript outside of the browser. Then, we'll install some packages (code that other developers have written to make our lives easier). But after that, you'll find that writing server-side Javascript is almost no different than writing Javascript for the browser!
+
+#### **Getting started**
+1. Install Node.js following [this guide](https://www.youtube.com/watch?v=La6kH33-AVM).
+   - At 2:22, the guide opens the command prompt. If you're using VSCode, you can just open the terminal by going to View > Terminal. Make sure that on the type of terminal is set to Command Prompt/CMD (not Powershell, next to the + button on the right side). Opening the terminal in VSCode makes sure that your terminal is immediately set to the right directory (your project). Double check to make sure you're in the root directory of your project (`webdev-code-challenge`).
+2. Time for some command line! Make a new directory called `backend` by typing: `mkdir backend` (mkdir = make directory).
+3. Enter your new directory by typing `cd backend` (cd = change directory).
+4. In your backend directory, we're gonna need some of those pre-made packages we mentioned earlier. To install packages, we use [npm](https://www.npmjs.com/) (Node package manager).
+5. .....
+
+#### **The assignment**
+     
 - **Task:** Create a simple Node.js/Express API that serves philosophical questions.
 - **Details:**
   - Set up an Express server with a `get` endpoint (e.g., `/api/questions/:id`) that returns a question from a hardcoded array based on the provided index.
