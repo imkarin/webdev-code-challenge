@@ -47,9 +47,12 @@ Create a new branch for each assignment: `assignment-X`. When you're done, creat
 
 - **Task:** Replace the hardcoded array with an API endpoint for fetching questions.
 - **Details:**
-  - You will be provided with a basic API endpoint (e.g., `https://example.com/api/questions`) that returns philosophical questions in JSON format.
-  - Use the `fetch` API to retrieve a question when the button is clicked.
-  - Update the DOM with the fetched question and maintain the answer input field and list as before.
+  - Instead of getting your questions from a hardcoded array, you'll now be fetching them from an external API.
+  - Use the `fetch` API to retrieve a question when the button is clicked:
+    - To fetch a question, you can make a GET-request to the following endpoint: `https://philosophy-api.netlify.app/api/question?id=[number]`, where `[number]` can be replaced, to get a specific question.
+    - The endpoint will return a response in **text** format.
+  - Update the DOM with the fetched question, and make sure the website functions the same as before (list of answers, local storage).
+  - You may need to figure out a new way to keep track of the questions that the user has already answered, to avoid fetching the same question twice.
 - **Goal:** Gain experience in fetching data from APIs using JavaScript.
 
 ### Assignment 4: Building a Node.js/Express API
