@@ -57,13 +57,15 @@ function doSomething() {
   questions.splice(randomSelector, 1);
   randomSelector = null;
   console.log(questions);
-  const li = document.createElement("li"); // creates the DOM elements
-  const header = document.createElement("h4"); // creates the DOM elements
-  header.textContent = questions[randomSelector]; // provide the value to the variable
-  const paragraph = document.createElement("p"); // creates the DOM elements
-  paragraph.textContent = answerField.value; // provide the value to the variable
-  li.appendChild(header); // makes the h4 a child to the li
-  li.appendChild(paragraph); // makes the p a child to the li
-  const ul = document.getElementById("answer-list");
-  ul.appendChild(li); // makes the li a child to the ul
+  for (let i = 0; i < answeredQuestions; i++) {
+    const li = document.createElement("li"); // creates the DOM elements
+    const header = document.createElement("h4"); // creates the DOM elements\
+    header.textContent = answeredQuestions.question; // provide the value to the variable
+    const paragraph = document.createElement("p"); // creates the DOM elements
+    paragraph.textContent = answeredQuestions.answer; // provide the value to the variable
+    li.appendChild(header); // makes the h4 a child to the li
+    li.appendChild(paragraph); // makes the p a child to the li
+    const ul = document.getElementById("answer-list");
+    ul.appendChild(li); // makes the li a child to the ul
+  }
 }
