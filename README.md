@@ -48,8 +48,10 @@ Create a new branch for each assignment: `assignment-X`. When you're done, creat
 - **Task:** Replace the hardcoded array with an API endpoint for fetching questions.
 - **Details:**
   - Instead of getting your questions from a hardcoded array, you'll now be fetching them from an external API.
-  - Use the `fetch` API to retrieve a question when the button is clicked:
-    - To fetch a question, you can make a GET-request to the following endpoint: `https://philosophy-api.netlify.app/api/question?id=[number]`, where the query parameter `id=[number]` can be used to get a specific question.
+  - Use Javascript's `fetch` API to retrieve a question when the button is clicked:
+    - The base of the external API is: `https://philosophy-api.netlify.app/api`.
+    - To fetch a question, you can make a GET-request to the following endpoint: `/question/[number]`, where the **parameter** `[number]` can be used to get a specific question.
+    - If you need an overview of all the available questions (for example, to see how many there are), you can use the endpoint: `/questions`.
     - The endpoint will return a response in **text** format.
   - Update the DOM with the fetched question, and make sure the website functions the same as before (list of answers, local storage).
   - You may need to figure out a new way to keep track of the questions that the user has already answered, to avoid fetching the same question twice.
