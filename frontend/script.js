@@ -49,26 +49,32 @@ const ul = document.getElementById("answer-list");
 let randomSelector = null;
 
 window.onload = function getStoredList() {
-  storedList = JSON.parse(localStorage.getItem("answeredQuestions"));
+  console.log(storedAnsweredQuestions);
   if (storedAnsweredQuestions !== null) {
-    // Copies code from submit for loop
-    const li = document.createElement("li"); // create DOM element
+    storedAnsweredQuestions.forEach((question) => {
+      // Copies code from submit for loop
+      const li = document.createElement("li"); // create DOM element
 
-    const header = document.createElement("h4"); // create DOM element
-    header.textContent = storedAnsweredQuestions.question; // provide value to Variable
+      const header = document.createElement("h4"); // create DOM element
+      header.textContent = storedAnsweredQuestions.question; // provide value to Variable
 
-    const paragraph = document.createElement("p"); // create DOM element
-    paragraph.textContent = storedAnsweredQuestions.answer; // provide value to variable
+      const paragraph = document.createElement("p"); // create DOM element
+      paragraph.textContent = storedAnsweredQuestions.answer; // provide value to variable
 
-    li.appendChild(header); // make h4 a child to li
-    li.appendChild(paragraph); // make p a child to li
-    ul.appendChild(li); // make li a child to ul
+      li.appendChild(header); // make h4 a child to li
+      li.appendChild(paragraph); // make p a child to li
+      ul.appendChild(li); // make li a child to ul
+    });
+  } else {
+    storedAnsweredQuestions = [];
   }
 };
 
 generateBtn.addEventListener("click", generateQuestion);
 
 submitBtn.addEventListener("click", submitAnswer);
+
+submitBtn.disabled = true;
 
 function generateQuestion() {
   if (randomSelector === null) {
