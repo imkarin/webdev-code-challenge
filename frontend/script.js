@@ -28,11 +28,19 @@ const questions = [
 
 const answeredQuestions = [];
 
+const storedList = [];
+
+const storedAnsweredQuestions = JSON.parse(
+  localStorage.getItem("answeredQuestions")
+);
+
+console.log(storedAnsweredQuestions);
+
 const questionH2 = document.getElementById("question");
 
 const generateBtn = document.getElementById("new-question");
 
-const submitAnswer = document.getElementById("submit-answer");
+const submitBtn = document.getElementById("submit-answer");
 
 const answerField = document.getElementById("answer");
 
@@ -40,20 +48,38 @@ const ul = document.getElementById("answer-list");
 
 let randomSelector = null;
 
+window.onload = function getStoredList() {
+  storedList = JSON.parse(localStorage.getItem("answeredQuestions"));
+  if (storedAnsweredQuestions !== null) {
+    // Copies code from submit for loop
+    const li = document.createElement("li"); // create DOM element
+
+    const header = document.createElement("h4"); // create DOM element
+    header.textContent = storedAnsweredQuestions.question; // provide value to Variable
+
+    const paragraph = document.createElement("p"); // create DOM element
+    paragraph.textContent = storedAnsweredQuestions.answer; // provide value to variable
+
+    li.appendChild(header); // make h4 a child to li
+    li.appendChild(paragraph); // make p a child to li
+    ul.appendChild(li); // make li a child to ul
+  }
+};
+
 generateBtn.addEventListener("click", generateQuestion);
 
-submitAnswer.addEventListener("click", doSomething);
+submitBtn.addEventListener("click", submitAnswer);
 
 function generateQuestion() {
   if (randomSelector === null) {
     randomSelector = Math.floor(Math.random() * questions.length);
     questionH2.textContent = questions[randomSelector];
   }
-  submitAnswer.disabled = false;
+  submitBtn.disabled = false;
   generateBtn.disabled = true;
 }
 
-function doSomething() {
+function submitAnswer() {
   const question = questions[randomSelector];
   const answer = answerField.value;
   const pair = { question: question, answer: answer };
@@ -64,27 +90,30 @@ function doSomething() {
   console.log(questions);
   ul.innerHTML = " ";
   questionH2.textContent = " Click the button for a new question ";
-  submitAnswer.disabled = true;
+  submitBtn.disabled = true;
   generateBtn.disabled = false;
 
   for (let i = 0; i < answeredQuestions.length; i++) {
-    const li = document.createElement("li"); // creates the DOM elements
+    const li = document.createElement("li"); // create DOM element
 
-    const header = document.createElement("h4"); // creates the DOM elements\
-    header.textContent = answeredQuestions[i].question; // provide the value to the variable
+    const header = document.createElement("h4"); // create DOM element
+    header.textContent = answeredQuestions[i].question; // provide value to Variable
 
-    const paragraph = document.createElement("p"); // creates the DOM elements
-    paragraph.textContent = answeredQuestions[i].answer; // provide the value to the variable
+    const paragraph = document.createElement("p"); // create DOM element
+    paragraph.textContent = answeredQuestions[i].answer; // provide value to variable
 
-    li.appendChild(header); // makes the h4 a child to the li
-    li.appendChild(paragraph); // makes the p a child to the li
-    ul.appendChild(li); // makes the li a child to the ul
+    li.appendChild(header); // make h4 a child to li
+    li.appendChild(paragraph); // make p a child to li
+    ul.appendChild(li); // make li a child to ul
   }
+
+  const jsonAnsweredQuestions = JSON.stringify(answeredQuestions);
+  localStorage.setItem("answeredQuestions", jsonAnsweredQuestions);
 }
 
 // TO-DO
 
-// Use localStorage to save an array of previously answered questions and their responses.
+// ✔ Use localStorage to save an array of previously answered questions and their responses.
 
 // When the page loads, check if there are saved answers in local storage and display them in the list.
 
