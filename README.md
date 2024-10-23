@@ -91,7 +91,7 @@ Now it's time to start writing some Javascript code.
    - By default, your project will already have one script: `"test": "echo \"Error: no test specified\" && exit 1"`. That's just a dummy script, that you can remove.
    - Instead, we will now create our own script: `"start": "nodemon app.js"` - our script is called "start", and when we run this script, nodemon will start running & watching our file.
 5. Run your newly made script in the terminal, by typing: `npm run start`.
-6. :sparkles: Your code runs! Try making some changes in _app.js_ to see that nodemon will automatically rerun your file.
+6. :sparkles: Your code is running! Try making some changes in _app.js_ to see that nodemon will automatically rerun your file.
 
 #### **Okay, time to _actually_ make your web server/API**
 
@@ -128,7 +128,7 @@ Now we're going to create a web server in our _app.js_. We'll go step by step, b
       console.log("Server is running on port " + port);
     });
     ```
-    Now if you visit localhost:3000/ in your browser, you'll receive a response! Try changing the `"/"` in your code for something else (always starting with `/`, though), and visit those routes in your browser.
+    Now if you visit [localhost:3000/](http://localhost:3000/) in your browser, you'll receive a response! Try changing the `"/"` in your code for something else (always starting with `/`, though), and visit those routes in your browser.
 4. Now, let's say you want to make an endpoint (route) called "/question". When someone requests this endpoint, we want to return a random philosophical question from a pre-set list of questions. You've already written part of this code in your Javascript file in assignment 1, and since we're still writing Javascript here, you can reuse that:
   ```js
   const questions = [
@@ -160,11 +160,21 @@ Remember the code to listen to a route (e.g. "/question", and return some sort o
  ```
 You may have noticed that the handler function (the second argument passed to `app.get()`), actually has two parameters: `req` and `res`. What happens when someone requests the endpoint "/question": Express makes sure that our function will be called, and will pass two arguments to our function: the first being a "Request" object, with all kinds of information about the request. The second is the "Response" object, which gives us the possibility to send a response back (like `res.send()`).
 
-➡️ We haven't used the request parameter yet, but try logging it, to see what kinds of info we have: `console.log(req)`.
+➡️ We haven't used the request parameter (`req`) yet, but try logging it, to see what kinds of info we have: `console.log(req)`.
 
-When you look at your terminal, you see a huge object with all kinds of properties. This is the request context. One very important property is the query: `req.query`. I'm sure you've seen URLs like this before: _https://website.com/search?term=apple_. In that URL, "/search" is the endpoint (or **route**), and everything after the "?" is called the **query parameters** - "term" being one query parameter.
+When you look at your terminal, you see a huge object with all kinds of properties. This is the request context. Two very important properties are: `query` and `params`. 
+ - You've most likely seen URLs like this before: _https://concert-website.com/events?genre=rock_., Here, "/search" is the path (or **route**), and everything after the "?" is called the **query** parameters. In this case, `genre` is one query parameter. Query parameters are often used to filter data coming from an API endpoint, in this case, filtering the "events" data by genre.
+   ![query-params](https://www.terminusapp.com/blog/wp-content/uploads/2022/07/anatomy-of-url-1024x341.png)
+- Another example URL: _https://concert-website.com/events/linkin-park-2024-12_. In this example, the URL uses a **path parameter**: `/linkin-park-2024-12`. The first part of the path (`/events`) will always stay the same, but the latter part is dynamic. Path parameters are often used to identify & request the data for one specific item.
+- For more info on the difference between query parameters and path parameters, here's a [useful article](https://apidog.com/blog/path-param-vs-query-param/)!
 
-➡️ Try visiting your endpoint: _http://localhost:3000/question?test=123, and note how `req.query` will now show: `{test: '123'}`. You can use this information, to return something specific in your response!
+➡️ In assignment 3, we were able to request one specific question via a number: `https://philosophy-api.netlify.app/api/question/[number]`. Here, `[number]` is a path parameter. You can make your API endpoint expect a path parameter ("foo"), by writing `/:foo` in the route:
+```js
+app.get("/question/:foo", (req, res) => {
+  console.log(req.params);
+})
+```
+Visit [localhost:3000/api/question/something](http://localhost:300/api/question/something), and checkout the logs.
 
 That's it for the introduction to Node.js and making your web server/API with Express. You can use your new knowledge to complete assignment nr. 4!
 
@@ -172,7 +182,8 @@ That's it for the introduction to Node.js and making your web server/API with Ex
      
 - **Task:** Create a simple Node.js/Express API that serves philosophical questions.
 - **Details:**
-  - Set up an Express server with a `get` endpoint (e.g., `/api/questions?id=123`) that returns a question from a hardcoded array based on the provided id/index.
+  - Set up an Express server with a `get` endpoint (e.g., `/api/questions/10`) that returns a question from a hardcoded array based on the provided id/index.
+    If you feel like you need to set up more endpoints to keep your frontend working, feel free to do so. Refer to the Express docs!
   - In your front-end code, modify the API call to request the philosophical questions from your own server (localhost).
   - Keep using local storage to track already answered questions.
 - **Goal:** Understand the basics of creating a Node.js/Express API.
