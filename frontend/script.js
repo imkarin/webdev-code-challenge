@@ -82,13 +82,10 @@ function doSomething() {
   }
 }
 
-// BUGS
-// - "Submit Answer" is able to clicked, resulting in an answer without an accompanying question, being logged
+// TO-DO
 
-// - "Submit Answer" can be clicked multiple times on the same question
+// Use localStorage to save an array of previously answered questions and their responses.
 
-// - Previous Answers that have been submitted, are continually appended when new questions and answered are submitted
-//   Thereby clogging the list with reiterating entries
+// When the page loads, check if there are saved answers in local storage and display them in the list.
 
-// - Whenever "Submit Answer" it will transfer a question to the answeredQuestions array even though no question has been
-//   retrived on page load and/or no new question has been retrieved after the previous one.
+// Ensure that upon button click, the new question is retrieved, and any existing answers are still visible after a page refresh.
