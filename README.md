@@ -50,7 +50,7 @@ Create a new branch for each assignment: `assignment-X`. When you're done, creat
   - Instead of getting your questions from a hardcoded array, you'll now be fetching them from an external API.
   - Use Javascript's `fetch` API to retrieve a question when the button is clicked:
     - The base of the external API is: `https://philosophy-api.netlify.app/api`.
-    - To fetch a question, you can make a GET-request to the following endpoint: `/question/[number]`, where the **parameter** `[number]` can be used to get a specific question.
+    - When the "generate question" button is clicked, fetch a question using the following endpoint: `/question/[number]`, where the **parameter** `[number]` can be used to get a specific question.
     - If you need an overview of all the available questions (for example, to see how many there are), you can use the endpoint: `/questions`.
     - The endpoint will return a response in **text** format.
   - Update the DOM with the fetched question, and make sure the website functions the same as before (list of answers, local storage).
