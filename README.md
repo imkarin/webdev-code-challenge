@@ -76,7 +76,7 @@ Setting up Node.js will take some configurations on your computer, to enable you
    - Second, we're going to install a package that will make our developer experience a bit easier: [nodemon](https://www.npmjs.com/package/nodemon). We will use nodemon to run our file with Javascript, and nodemon will keep track of changes in your file - and automatically restart the script when you save new changes. This package can be considered a "dev dependency" - it's nice to have during development, but its code will not be necessary in final build (the compiled version of our project that we would eventually host somewhere). To install nodemon as a **dev dependency**, run: `npm install nodemon --save-dev`.
    - Notice how your _package.json_ now also contains `devDependencies`. Everything in this list will not be compiled when you eventually finish and build your code for prodction.
   
-Done! You've successfully installed Node.js on your PC, and can run Javascript on your computer from now on. After that, you've created the base of you back-end: an npm-project that uses two packages.  
+:sparkles: Done! You've successfully installed Node.js on your PC, and can run Javascript on your computer from now on. After that, you've created the base of you back-end: an npm-project that uses two packages.  
 
 #### **Making your web server/API: first steps**
 
