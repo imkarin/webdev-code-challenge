@@ -187,7 +187,7 @@ That's it for the introduction to Node.js and making your web server/API with Ex
        - Example: Your Netflix-knockoff site's database could be hosted on cluster: "cluster0.ab392f.mongodb.net". The database, named "mflix", contains several collections, such as "movies", "actors", "genres", "directors". The "movies" collection will contain documents: 1 document = 1 movie.
        
        ![mongodb](https://github.com/user-attachments/assets/9c75ffc9-f3a3-48fd-bccd-40f00253039a)
-  - You can now delete the sample database, and make your own database, contain a collection of questions (1 question = 1 document).
+  - You can now delete the sample database, and make your own database, containing a collection of questions (1 question = 1 document).
   - In your project, install Mongoose (npm package that will help you connect to your database): `npm install mongoose`.
   - In your server script (_app.js_),  Use Mongoose to set up a connection to a MongoDB database and define a schema for philosophical questions. Refer to the [Mongoose documentation](https://www.npmjs.com/package/mongoose).
   - Modify your `get` questions endpoint to fetch questions from the database using the provided ID.
