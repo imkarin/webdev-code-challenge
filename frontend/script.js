@@ -1,4 +1,4 @@
-const questions = [
+let questions = [
   "Is the mind the same as the brain, or do we have souls? ",
   "Can computers think, or fall in love? ",
   "Can computers be creative? ",
@@ -26,13 +26,13 @@ const questions = [
   "What is friendship and why do we need it? ",
 ];
 
-const answeredQuestions = [];
+console.log(questions.indexOf("Ii09ki90ik9ikwe have souls? "));
 
 const questionH2 = document.getElementById("question");
 
 const generateBtn = document.getElementById("new-question");
 
-const submitAnswer = document.getElementById("submit-answer");
+const submitBtn = document.getElementById("submit-answer");
 
 const answerField = document.getElementById("answer");
 
@@ -40,55 +40,103 @@ const ul = document.getElementById("answer-list");
 
 let randomSelector = null;
 
+window.onload = function getStoredList() {
+  const initialLocalStorage = JSON.parse(
+    localStorage.getItem("answeredQuestions")
+  );
+  console.log(initialLocalStorage);
+  if (initialLocalStorage !== null) {
+    initialLocalStorage.forEach((pair) => {
+      // check questions in inital database and cross reference with localstorage then splice them out
+      const questionIndex = questions.indexOf(pair.question);
+      if (questionIndex > -1) {
+        questions.splice(questionIndex, 1);
+      }
+
+      // Copies code from submit for loop
+      const li = document.createElement("li"); // create DOM element
+
+      const header = document.createElement("h4"); // create DOM element
+      header.textContent = pair.question; // provide value to Variable
+
+      const paragraph = document.createElement("p"); // create DOM element
+      paragraph.textContent = pair.answer; // provide value to variable
+
+      li.appendChild(header); // make h4 a child to li
+      li.appendChild(paragraph); // make p a child to li
+      ul.appendChild(li); // make li a child to ul
+    });
+  }
+};
+
 generateBtn.addEventListener("click", generateQuestion);
 
-submitAnswer.addEventListener("click", doSomething);
+submitBtn.addEventListener("click", submitAnswer);
+
+submitBtn.disabled = true;
+answerField.disabled = true;
+answerField.value = " ";
 
 function generateQuestion() {
+  generateBtn.disabled = true;
   if (randomSelector === null) {
     randomSelector = Math.floor(Math.random() * questions.length);
-    questionH2.textContent = questions[randomSelector];
   }
-  submitAnswer.disabled = false;
-  generateBtn.disabled = true;
+  if (questions.length > 0) {
+    submitBtn.disabled = false;
+    answerField.disabled = false;
+
+    questionH2.textContent = questions[randomSelector];
+  } else {
+    questionH2.textContent = "No Questions Left :C";
+  }
 }
 
-function doSomething() {
+function submitAnswer() {
   const question = questions[randomSelector];
   const answer = answerField.value;
   const pair = { question: question, answer: answer };
 
-  answeredQuestions.push(pair);
+  let latestLocalStorage = JSON.parse(
+    localStorage.getItem("answeredQuestions")
+  );
+  if (latestLocalStorage === null) {
+    latestLocalStorage = [];
+  }
+
+  latestLocalStorage.push(pair);
   questions.splice(randomSelector, 1);
   randomSelector = null;
   console.log(questions);
   ul.innerHTML = " ";
   questionH2.textContent = " Click the button for a new question ";
-  submitAnswer.disabled = true;
+  submitBtn.disabled = true;
   generateBtn.disabled = false;
+  answerField.disabled = true;
+  answerField.value = " ";
 
-  for (let i = 0; i < answeredQuestions.length; i++) {
-    const li = document.createElement("li"); // creates the DOM elements
+  for (let i = 0; i < latestLocalStorage.length; i++) {
+    const li = document.createElement("li"); // create DOM element
 
-    const header = document.createElement("h4"); // creates the DOM elements\
-    header.textContent = answeredQuestions[i].question; // provide the value to the variable
+    const header = document.createElement("h4"); // create DOM element
+    header.textContent = latestLocalStorage[i].question; // provide value to Variable
 
-    const paragraph = document.createElement("p"); // creates the DOM elements
-    paragraph.textContent = answeredQuestions[i].answer; // provide the value to the variable
+    const paragraph = document.createElement("p"); // create DOM element
+    paragraph.textContent = latestLocalStorage[i].answer; // provide value to variable
 
-    li.appendChild(header); // makes the h4 a child to the li
-    li.appendChild(paragraph); // makes the p a child to the li
-    ul.appendChild(li); // makes the li a child to the ul
+    li.appendChild(header); // make h4 a child to li
+    li.appendChild(paragraph); // make p a child to li
+    ul.appendChild(li); // make li a child to ul
   }
+
+  const jsonAnsweredQuestions = JSON.stringify(latestLocalStorage);
+  localStorage.setItem("answeredQuestions", jsonAnsweredQuestions);
 }
 
-// BUGS
-// - "Submit Answer" is able to clicked, resulting in an answer without an accompanying question, being logged
+// TO-DO
 
-// - "Submit Answer" can be clicked multiple times on the same question
+// ✔ Use localStorage to save an array of previously answered questions and their responses.
 
-// - Previous Answers that have been submitted, are continually appended when new questions and answered are submitted
-//   Thereby clogging the list with reiterating entries
+// ✔ When the page loads, check if there are saved answers in local storage and display them in the list.
 
-// - Whenever "Submit Answer" it will transfer a question to the answeredQuestions array even though no question has been
-//   retrived on page load and/or no new question has been retrieved after the previous one.
+// ✔ Ensure that upon button click, the new question is retrieved, and any existing answers are still visible after a page refresh.
