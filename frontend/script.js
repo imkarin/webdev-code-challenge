@@ -1,32 +1,4 @@
-let questions = [
-  "Is the mind the same as the brain, or do we have souls? ",
-  "Can computers think, or fall in love? ",
-  "Can computers be creative? ",
-  "What is consciousness? ",
-  "Can we really know what it feels like to be a bat? ",
-  "When you have a toothache, is the pain in your mouth or in your brain? ",
-  "What is an emotion? ",
-  "Is love just a feeling? ",
-  "How is love different from passion or sexual desire? ",
-  "Are emotions irrational? ",
-  "Which would you rather be - an unhappy human being or a happy dog? ",
-  "What is the meaning of life? ",
-  "Is happiness the most important purpose in life? ",
-  "Is it always better to have more choices? ",
-  "Does freewill really exist? ",
-  "If there is no freewill, should we punish people at all? ",
-  "If God knows what you will do tomorrow, do you still have freewill? ",
-  "Does God exist? ",
-  "If God exists, why is there so much evil in the world? ",
-  "Can God create a stone so heavy that he cannot lift? ",
-  "Can there be two almighty Gods? ",
-  "Can there be morality without God? ",
-  "Is morality relative?  ",
-  "Is it objectively wrong to torture innocent babies just for fun? ",
-  "What is friendship and why do we need it? ",
-];
-
-console.log(questions.indexOf("Ii09ki90ik9ikwe have souls? "));
+const previouslyAnsweredSelectors = [];
 
 const questionH2 = document.getElementById("question");
 
@@ -40,27 +12,33 @@ const ul = document.getElementById("answer-list");
 
 let randomSelector = null;
 
-window.onload = function getStoredList() {
+let questionsData = null;
+
+let question = null;
+
+window.onload = async function getStoredList() {
+  const res = await fetch("https://philosophy-api.netlify.app/api/questions");
+  console.log(res);
+  questionsData = await res.json();
+  console.log(questionsData);
+
   const initialLocalStorage = JSON.parse(
     localStorage.getItem("answeredQuestions")
   );
   console.log(initialLocalStorage);
   if (initialLocalStorage !== null) {
-    initialLocalStorage.forEach((pair) => {
+    initialLocalStorage.forEach((answeredQuestion) => {
       // check questions in inital database and cross reference with localstorage then splice them out
-      const questionIndex = questions.indexOf(pair.question);
-      if (questionIndex > -1) {
-        questions.splice(questionIndex, 1);
-      }
+      previouslyAnsweredSelectors.push(answeredQuestion.id);
 
       // Copies code from submit for loop
       const li = document.createElement("li"); // create DOM element
 
       const header = document.createElement("h4"); // create DOM element
-      header.textContent = pair.question; // provide value to Variable
+      header.textContent = answeredQuestion.question; // provide value to Variable
 
       const paragraph = document.createElement("p"); // create DOM element
-      paragraph.textContent = pair.answer; // provide value to variable
+      paragraph.textContent = answeredQuestion.answer; // provide value to variable
 
       li.appendChild(header); // make h4 a child to li
       li.appendChild(paragraph); // make p a child to li
@@ -77,25 +55,48 @@ submitBtn.disabled = true;
 answerField.disabled = true;
 answerField.value = " ";
 
-function generateQuestion() {
-  generateBtn.disabled = true;
-  if (randomSelector === null) {
-    randomSelector = Math.floor(Math.random() * questions.length);
-  }
-  if (questions.length > 0) {
-    submitBtn.disabled = false;
-    answerField.disabled = false;
-
-    questionH2.textContent = questions[randomSelector];
-  } else {
+function generateSelector() {
+  if (previouslyAnsweredSelectors.length === questionsData.total_amount) {
     questionH2.textContent = "No Questions Left :C";
+    return;
+  }
+  randomSelector = Math.floor(Math.random() * questionsData.total_amount);
+
+  if (previouslyAnsweredSelectors.includes(randomSelector)) {
+    generateSelector();
   }
 }
 
+async function generateQuestion() {
+  if (randomSelector === null) {
+    generateSelector();
+  }
+  console.log(
+    "https://philosophy-api.netlify.app/api/question/" + randomSelector
+  );
+  if (questionsData.total_amount > 0 && randomSelector !== null) {
+    const res = await fetch(
+      "https://philosophy-api.netlify.app/api/question/" + randomSelector
+    );
+    question = await res.text();
+
+    questionH2.textContent = question;
+    submitBtn.disabled = false;
+    answerField.disabled = false;
+  }
+  generateBtn.disabled = true;
+  // (await fetch("https://philosophy-api.netlify.app/api/questions"))
+}
+
 function submitAnswer() {
-  const question = questions[randomSelector];
+  previouslyAnsweredSelectors.push(randomSelector);
+  console.log(previouslyAnsweredSelectors);
   const answer = answerField.value;
-  const pair = { question: question, answer: answer };
+  const answeredQuestion = {
+    question: question,
+    answer: answer,
+    id: randomSelector,
+  };
 
   let latestLocalStorage = JSON.parse(
     localStorage.getItem("answeredQuestions")
@@ -104,10 +105,8 @@ function submitAnswer() {
     latestLocalStorage = [];
   }
 
-  latestLocalStorage.push(pair);
-  questions.splice(randomSelector, 1);
+  latestLocalStorage.push(answeredQuestion);
   randomSelector = null;
-  console.log(questions);
   ul.innerHTML = " ";
   questionH2.textContent = " Click the button for a new question ";
   submitBtn.disabled = true;
@@ -133,10 +132,16 @@ function submitAnswer() {
   localStorage.setItem("answeredQuestions", jsonAnsweredQuestions);
 }
 
-// TO-DO
+// TO-DO ✔
 
-// ✔ Use localStorage to save an array of previously answered questions and their responses.
+// Instead of getting your questions from a hardcoded array, you'll now be fetching them from an external API.
 
-// ✔ When the page loads, check if there are saved answers in local storage and display them in the list.
+// Use Javascript's fetch API to retrieve a question when the button is clicked:
+//   ✔ The base of the external API is: https://philosophy-api.netlify.app/api.
+//    ✔ When the "generate question" button is clicked, fetch a question using the following endpoint: /question/[number], where the parameter [number] can be used to get a specific question.
+//   ✔ If you need an overview of all the available questions (for example, to see how many there are), you can use the endpoint: /questions.
+//    ✔ The endpoint will return a response in text format.
 
-// ✔ Ensure that upon button click, the new question is retrieved, and any existing answers are still visible after a page refresh.
+// ✔ Update the DOM with the fetched question, and make sure the website functions the same as before (list of answers, local storage).
+
+// ✔ You may need to figure out a new way to keep track of the questions that the user has already answered, to avoid fetching the same question twice.
