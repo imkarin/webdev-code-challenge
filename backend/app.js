@@ -30,16 +30,23 @@ const questions = [
   "What is friendship and why do we need it? ",
 ];
 
-questions.forEach((question, index) => {
-  app.get(`/question/${index}`, (req, res) => {
-    res.send(question);
-  });
-});
+app.get("/question/:id", (req, res) => {
+  const questionId = req.params.id;
+  console.log(questionId);
+  const questionRes = questions.indexOf(questionId, 1); // WIP
+  console.log(questionRes);
 
-app.get("/questions", (req, res) => {
-  res.json({ count: questions.length });
+  if (questions.includes(questionId)) {
+    res.send(questionRes);
+  }
 });
 
 app.listen(port, () => {
   console.log("Server is running on port " + port);
 });
+
+// app.get("/question", (req, res) => {
+//   const randomIndex = Math.floor(Math.random() * questions.length);
+
+//   res.send(questions[randomIndex]);
+// });

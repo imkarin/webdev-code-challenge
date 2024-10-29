@@ -17,7 +17,7 @@ let questionsData = null;
 let question = null;
 
 window.onload = async function getStoredList() {
-  const res = await fetch("https://philosophy-api.netlify.app/api/questions");
+  const res = await fetch("https://philosophy-api.netlify.app/api/questions"); // REPLACE THIS URL WITH MY OWN
   console.log(res);
   questionsData = await res.json();
   console.log(questionsData);
@@ -71,13 +71,9 @@ async function generateQuestion() {
   if (randomSelector === null) {
     generateSelector();
   }
-  console.log(
-    "https://philosophy-api.netlify.app/api/question/" + randomSelector
-  );
+  console.log("http://localhost:3000/question/" + randomSelector);
   if (questionsData.total_amount > 0 && randomSelector !== null) {
-    const res = await fetch(
-      "https://philosophy-api.netlify.app/api/question/" + randomSelector
-    );
+    const res = await fetch("http://localhost:3000/question/" + randomSelector);
     question = await res.text();
 
     questionH2.textContent = question;
