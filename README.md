@@ -152,7 +152,7 @@ Now we're going to create a web server in our _app.js_. We'll go step by step, b
 At this point, you've almost recreated the API that you were fetching from in assignment 3. The key difference being: your current API returns a random question, and the API you fetched from required you to provide a **query parameter**: `id`, to request a specific question. This was useful, so that you could make sure not to request a question that the user had already answered.
 
 So let's recreate this:
-Remember the code to listen to a route (e.g. "/question", and return some sort of response):
+Remember we told the code to listen to a route (e.g. "/question", and return some sort of response):
  ```js
  app.get("/question", (req, res) => {
    res.send("Question?");
