@@ -17,15 +17,13 @@ let questionsData = null;
 let question = null;
 
 window.onload = async function getStoredList() {
-  const res = await fetch("https://philosophy-api.netlify.app/api/questions"); // REPLACE THIS URL WITH MY OWN
-  console.log(res);
+  const res = await fetch("http://localhost:3000/questions"); // REPLACE THIS URL WITH MY OWN
+
   questionsData = await res.json();
-  console.log(questionsData);
 
   const initialLocalStorage = JSON.parse(
     localStorage.getItem("answeredQuestions")
   );
-  console.log(initialLocalStorage);
   if (initialLocalStorage !== null) {
     initialLocalStorage.forEach((answeredQuestion) => {
       // check questions in inital database and cross reference with localstorage then splice them out
@@ -71,7 +69,6 @@ async function generateQuestion() {
   if (randomSelector === null) {
     generateSelector();
   }
-  console.log("http://localhost:3000/question/" + randomSelector);
   if (questionsData.total_amount > 0 && randomSelector !== null) {
     const res = await fetch("http://localhost:3000/question/" + randomSelector);
     question = await res.text();
@@ -81,12 +78,10 @@ async function generateQuestion() {
     answerField.disabled = false;
   }
   generateBtn.disabled = true;
-  // (await fetch("https://philosophy-api.netlify.app/api/questions"))
 }
 
 function submitAnswer() {
   previouslyAnsweredSelectors.push(randomSelector);
-  console.log(previouslyAnsweredSelectors);
   const answer = answerField.value;
   const answeredQuestion = {
     question: question,
