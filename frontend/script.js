@@ -1,4 +1,4 @@
-const previouslyAnsweredSelectors = [];
+const previouslyAnsweredIds = [];
 
 const questionH2 = document.getElementById("question");
 
@@ -10,14 +10,14 @@ const answerField = document.getElementById("answer");
 
 const ul = document.getElementById("answer-list");
 
-let randomSelector = null;
+let randomId = null;
 
 let questionsData = null;
 
-let question = null;
+let questionObj = null;
 
 window.onload = async function getStoredList() {
-  const res = await fetch("http://localhost:3000/questions"); // REPLACE THIS URL WITH MY OWN
+  const res = await fetch("http://localhost:3000/questions");
 
   questionsData = await res.json();
 
@@ -27,7 +27,7 @@ window.onload = async function getStoredList() {
   if (initialLocalStorage !== null) {
     initialLocalStorage.forEach((answeredQuestion) => {
       // check questions in inital database and cross reference with localstorage then splice them out
-      previouslyAnsweredSelectors.push(answeredQuestion.id);
+      previouslyAnsweredIds.push(answeredQuestion.id);
 
       // Copies code from submit for loop
       const li = document.createElement("li"); // create DOM element
@@ -53,27 +53,28 @@ submitBtn.disabled = true;
 answerField.disabled = true;
 answerField.value = " ";
 
-function generateSelector() {
-  if (previouslyAnsweredSelectors.length === questionsData.total_amount) {
+function selectRandomId() {
+  if (previouslyAnsweredIds.length === questionsData.total_amount) {
     questionH2.textContent = "No Questions Left :C";
     return;
   }
-  randomSelector = Math.floor(Math.random() * questionsData.total_amount);
+  const randomSelector = Math.floor(Math.random() * questionsData.total_amount);
+  randomId = questionsData.questions[randomSelector]._id;
 
-  if (previouslyAnsweredSelectors.includes(randomSelector)) {
-    generateSelector();
+  if (previouslyAnsweredIds.includes(randomId)) {
+    selectRandomId();
   }
 }
 
 async function generateQuestion() {
-  if (randomSelector === null) {
-    generateSelector();
+  if (randomId === null) {
+    selectRandomId();
   }
-  if (questionsData.total_amount > 0 && randomSelector !== null) {
-    const res = await fetch("http://localhost:3000/question/" + randomSelector);
-    question = await res.text();
+  if (questionsData.total_amount > 0 && randomId !== null) {
+    const res = await fetch("http://localhost:3000/question/" + randomId);
+    questionObj = await res.json();
 
-    questionH2.textContent = question;
+    questionH2.textContent = questionObj.question;
     submitBtn.disabled = false;
     answerField.disabled = false;
   }
@@ -81,12 +82,12 @@ async function generateQuestion() {
 }
 
 function submitAnswer() {
-  previouslyAnsweredSelectors.push(randomSelector);
+  previouslyAnsweredIds.push(questionObj._id);
   const answer = answerField.value;
   const answeredQuestion = {
-    question: question,
+    id: questionObj._id,
+    question: questionObj.question,
     answer: answer,
-    id: randomSelector,
   };
 
   let latestLocalStorage = JSON.parse(
@@ -97,7 +98,7 @@ function submitAnswer() {
   }
 
   latestLocalStorage.push(answeredQuestion);
-  randomSelector = null;
+  randomId = null;
   ul.innerHTML = " ";
   questionH2.textContent = " Click the button for a new question ";
   submitBtn.disabled = true;

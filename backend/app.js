@@ -10,34 +10,32 @@ const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
 };
 
-async function run() {
+async function connectToDatabase() {
   try {
     // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
     await mongoose.connect(uri, clientOptions);
-    await mongoose.connection.db.admin().command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
+    console.log("Connected to MongoDB!");
+  } catch (e) {
     // Ensures that the client will close when you finish/error
-    await mongoose.disconnect();
+    console.error(e);
   }
 }
-run().catch(console.dir);
 
 const Schema = mongoose.Schema;
 
-const QuestionSchema = new Schema({
+// Schema is like a blueprint: what properties does a Question have?
+// Example of "Dog" schema: a dog has a name, age, color, etc.
+const questionSchema = new Schema({
   question: String,
 });
 
-const MyModel = mongoose.model("Question", QuestionSchema);
+// A model is like a Class: the object/function that you can use, to actually create an instance of a
+// dog, give it its own name, color (etc. everything that was "determined" in the blueprint).
+const QuestionModel = mongoose.model("Question", questionSchema);
 
 async function getAllDocuments() {
-  // NEW ATTEMPT BUT CONFUSION
   try {
-    const documents = await MyModel.find();
-    console.log(documents);
+    const documents = await QuestionModel.find();
     return documents; // This will be an array of documents??
   } catch (error) {
     console.error("Error fetching documents:", error);
@@ -45,14 +43,15 @@ async function getAllDocuments() {
   }
 }
 
-app.get("/question/:id?", (req, res) => {
+app.get("/question/:id?", async (req, res) => {
   const questionId = req.params.id;
 
   if (questionId === undefined) {
     res.status(404).send("Please provide an id");
   }
 
-  const question = questions[questionId];
+  const question = await QuestionModel.findById(questionId);
+  console.log("question", question);
 
   if (question === undefined) {
     res.status(404).send("No question found with id: " + questionId);
@@ -61,25 +60,18 @@ app.get("/question/:id?", (req, res) => {
   }
 });
 
-app.get("/questions", (req, res) => {
-  const responseObject = {
-    questions: questions,
-    total_amount: questions.length,
-    last_updated: new Date("2024-10-10"),
-  };
+app.get("/questions", async (req, res) => {
+  const allQuestions = await getAllDocuments();
 
-  res.send(responseObject).send(questionMap);
+  const responseObject = {
+    last_updated: new Date("2024-10-10"),
+    total_amount: allQuestions.length,
+    questions: allQuestions,
+  };
+  res.send(responseObject);
 });
 
 app.listen(port, () => {
   console.log("Server is running on port " + port);
+  connectToDatabase();
 });
-
-// MyModel.find({}, function (err, questions) {
-//   let questionMap = {};
-//   console.log(questionMap);
-//   MyModel.forEach(function (question) {      APPARENTLY DOESN'T WORK ANYMORE AFTER V5 MONGOOSE
-//     questionMap[questions._id] = question;
-//     console.log(questionMap);
-//   });
-// });
