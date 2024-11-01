@@ -1,35 +1,49 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-app.use(cors());
+const mongoose = require("mongoose");
 const port = 3000;
+const uri = process.env.URI;
+app.use(cors());
 
-const questions = [
-  "Is the mind the same as the brain, or do we have souls?",
-  "Can computers think, or fall in love?",
-  "Can computers be creative?",
-  "What is consciousness?",
-  "Can we really know what it feels like to be a bat?",
-  "When you have a toothache, is the pain in your mouth or in your brain?",
-  "What is an emotion?",
-  "Is love just a feeling?",
-  "How is love different from passion or sexual desire?",
-  "Are emotions irrational?",
-  "Which would you rather be - an unhappy human being or a happy dog?",
-  "What is the meaning of life?",
-  "Is happiness the most important purpose in life?",
-  "Is it always better to have more choices?",
-  "Does freewill really exist?",
-  "If there is no freewill, should we punish people at all?",
-  "If God knows what you will do tomorrow, do you still have freewill?",
-  "Does God exist?",
-  "If God exists, why is there so much evil in the world?",
-  "Can God create a stone so heavy that he cannot lift?",
-  "Can there be two almighty Gods?",
-  "Can there be morality without God?",
-  "Is morality relative?",
-  "What is friendship and why do we need it?",
-];
+const clientOptions = {
+  serverApi: { version: "1", strict: true, deprecationErrors: true },
+};
+
+async function run() {
+  try {
+    // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
+    await mongoose.connect(uri, clientOptions);
+    await mongoose.connection.db.admin().command({ ping: 1 });
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await mongoose.disconnect();
+  }
+}
+run().catch(console.dir);
+
+const Schema = mongoose.Schema;
+
+const QuestionSchema = new Schema({
+  question: String,
+});
+
+const MyModel = mongoose.model("Question", QuestionSchema);
+
+async function getAllDocuments() {
+  // NEW ATTEMPT BUT CONFUSION
+  try {
+    const documents = await MyModel.find();
+    console.log(documents);
+    return documents; // This will be an array of documents??
+  } catch (error) {
+    console.error("Error fetching documents:", error);
+    throw error;
+  }
+}
 
 app.get("/question/:id?", (req, res) => {
   const questionId = req.params.id;
@@ -54,9 +68,18 @@ app.get("/questions", (req, res) => {
     last_updated: new Date("2024-10-10"),
   };
 
-  res.send(responseObject);
+  res.send(responseObject).send(questionMap);
 });
 
 app.listen(port, () => {
   console.log("Server is running on port " + port);
 });
+
+// MyModel.find({}, function (err, questions) {
+//   let questionMap = {};
+//   console.log(questionMap);
+//   MyModel.forEach(function (question) {      APPARENTLY DOESN'T WORK ANYMORE AFTER V5 MONGOOSE
+//     questionMap[questions._id] = question;
+//     console.log(questionMap);
+//   });
+// });
