@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const bodyParser = require("body-parser");
+
 const port = 3000;
 const uri = process.env.URI;
 app.use(cors());
@@ -25,13 +28,13 @@ const Schema = mongoose.Schema;
 
 // Schema is like a blueprint: what properties does a Question have?
 // Example of "Dog" schema: a dog has a name, age, color, etc.
-const questionSchema = new Schema({
+const QuestionSchema = new Schema({
   question: String,
 });
 
 // A model is like a Class: the object/function that you can use, to actually create an instance of a
 // dog, give it its own name, color (etc. everything that was "determined" in the blueprint).
-const QuestionModel = mongoose.model("Question", questionSchema);
+const QuestionModel = mongoose.model("Question", QuestionSchema);
 
 async function getAllDocuments() {
   try {
@@ -69,6 +72,57 @@ app.get("/questions", async (req, res) => {
     questions: allQuestions,
   };
   res.send(responseObject);
+});
+
+// USER REGISTER DATA STUFF
+
+app.use(bodyParser.json());
+app.use(express.static(__dirname));
+
+const UserSchema = mongoose.Schema({
+  username: { type: String, required: true },
+  password: { type: String, required: true },
+});
+
+const UserModel = mongoose.model("User", UserSchema);
+
+app.post("/register", async (req, res, next) => {
+  console.log(mongoose.connection.readyState);
+
+  const { username, password } = req.body;
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    await UserModel.create({
+      username: username,
+      password: hashedPassword,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ message: err.message });
+  }
+
+  res.json({ message: "Registration Succesful" });
+});
+
+// USER LOGIN DATA STUFF
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  const userFromDB = ; // GET USER FROM DATABASE BY USERNAME
+
+  console.log(userFromDB);
+
+  if (!userFromDB) {
+    // ADD RES SEND FOR FAILURE
+  }
+
+  const passwordMatch = await bcrypt.compare(password, userFromDB);
+  if (passwordMatch) {
+    // ADD const token=jwt...
+    // ADD res.cookie 
+  }
+
 });
 
 app.listen(port, () => {
