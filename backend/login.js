@@ -11,7 +11,27 @@ console.log(user);
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
 
-app.post("/register", async (req, res) => {
+document
+  .getElementById("login-form")
+  .addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const username = document.getElementById("login-username").value;
+    const password = document.getElementById("login-password").value;
+
+    const response = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const result = await response.json();
+    alert(result.message);
+  });
+
+app.get("/register", async (req, res) => {
   const { username, password } = req.body;
 
   if (user[username]) {
