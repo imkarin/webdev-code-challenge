@@ -4,6 +4,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 const port = 3000;
 const uri = process.env.URI;
@@ -78,6 +80,7 @@ app.get("/questions", async (req, res) => {
 
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
+app.use(cookieParser());
 
 const UserSchema = mongoose.Schema({
   username: { type: String, required: true },
@@ -97,6 +100,23 @@ app.post("/register", async (req, res, next) => {
       username: username,
       password: hashedPassword,
     });
+
+    const check = await Collection.findOne({ name: req.body.name });
+    if (check) {
+      // Not sure if this should get in the login section or the register section
+    } else {
+      const token = jwt.sign({ name: req.body.name }, "LONGSTRINGHERE");
+
+      const data = {
+        name: req.body.name,
+        password: await hashedPassword(req.body.password),
+        token: token,
+      };
+
+      console.log(data);
+
+      await Collection.insertMany([data]);
+    }
   } catch (err) {
     console.log(err);
     return res.status(500).send({ message: err.message });
@@ -109,7 +129,7 @@ app.post("/register", async (req, res, next) => {
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const userFromDB = ; // GET USER FROM DATABASE BY USERNAME
+  // const userFromDB = ;  GET USER FROM DATABASE BY USERNAME
 
   console.log(userFromDB);
 
@@ -119,10 +139,9 @@ app.post("/login", async (req, res) => {
 
   const passwordMatch = await bcrypt.compare(password, userFromDB);
   if (passwordMatch) {
+    // ADD res.cookie
     // ADD const token=jwt...
-    // ADD res.cookie 
   }
-
 });
 
 app.listen(port, () => {
