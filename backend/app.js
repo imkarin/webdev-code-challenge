@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 
 const port = 3000;
 const uri = process.env.URI;
+const tokenSignature = process.env.SECRET_PASSWORD;
 app.use(cors());
 
 const clientOptions = {
@@ -90,39 +91,29 @@ const UserSchema = mongoose.Schema({
 const UserModel = mongoose.model("User", UserSchema);
 
 app.post("/register", async (req, res, next) => {
-  console.log(mongoose.connection.readyState);
-
   const { username, password } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  try {
-    await UserModel.create({
-      username: username,
-      password: hashedPassword,
-    });
+  const checkIfUserExists = await UserModel.findOne({ username: username });
 
-    const check = await Collection.findOne({ name: req.body.name });
-    if (check) {
-      // Not sure if this should get in the login section or the register section
-    } else {
-      const token = jwt.sign({ name: req.body.name }, "LONGSTRINGHERE");
+  if (checkIfUserExists) {
+    return res.json({ message: "Username already taken" });
+  } else {
+    try {
+      const token = jwt.sign({ username: username }, tokenSignature);
 
-      const data = {
-        name: req.body.name,
-        password: await hashedPassword(req.body.password),
+      await UserModel.create({
+        username: username,
+        password: hashedPassword,
         token: token,
-      };
+      });
 
-      console.log(data);
-
-      await Collection.insertMany([UserSchema]);
+      res.json({ message: "Registration Succesful" });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send({ message: err.message });
     }
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send({ message: err.message });
   }
-
-  res.json({ message: "Registration Succesful" });
 });
 
 // USER LOGIN DATA STUFF
