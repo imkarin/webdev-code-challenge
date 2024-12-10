@@ -115,7 +115,7 @@ app.post("/register", async (req, res, next) => {
 
       console.log(data);
 
-      await Collection.insertMany([data]);
+      await Collection.insertMany([UserSchema]);
     }
   } catch (err) {
     console.log(err);
