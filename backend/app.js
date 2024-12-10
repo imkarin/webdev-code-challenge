@@ -10,7 +10,11 @@ const cookieParser = require("cookie-parser");
 const port = 3000;
 const uri = process.env.URI;
 const tokenSignature = process.env.SECRET_PASSWORD;
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:5500" }));
+
+app.use(bodyParser.json());
+app.use(express.static(__dirname));
+app.use(cookieParser());
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
@@ -57,7 +61,6 @@ app.get("/question/:id?", async (req, res) => {
   }
 
   const question = await QuestionModel.findById(questionId);
-  console.log("question", question);
 
   if (question === undefined) {
     res.status(404).send("No question found with id: " + questionId);
@@ -67,6 +70,7 @@ app.get("/question/:id?", async (req, res) => {
 });
 
 app.get("/questions", async (req, res) => {
+  console.log("req.cookies", req.cookies);
   const allQuestions = await getAllDocuments();
 
   const responseObject = {
@@ -79,13 +83,10 @@ app.get("/questions", async (req, res) => {
 
 // USER REGISTER DATA STUFF
 
-app.use(bodyParser.json());
-app.use(express.static(__dirname));
-app.use(cookieParser());
-
 const UserSchema = mongoose.Schema({
   username: { type: String, required: true },
   password: { type: String, required: true },
+  token: { type: String, required: true },
 });
 
 const UserModel = mongoose.model("User", UserSchema);
@@ -117,21 +118,27 @@ app.post("/register", async (req, res, next) => {
 });
 
 // USER LOGIN DATA STUFF
-
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  // const userFromDB = ;  GET USER FROM DATABASE BY USERNAME
+  const userFromDB = await UserModel.findOne({ username: username });
 
-  console.log(userFromDB);
-
+  // User doesn't exist
   if (!userFromDB) {
-    // ADD RES SEND FOR FAILURE
+    res.status(401).json({ message: "User doesn't exist" });
+    return;
   }
 
-  const passwordMatch = await bcrypt.compare(password, userFromDB);
+  const passwordMatch = await bcrypt.compare(password, userFromDB.password);
+
   if (passwordMatch) {
-    // ADD res.cookie
-    // ADD const token=jwt...
+    return res
+      .cookie("jwt", userFromDB.token, {
+        maxAge: 600000,
+      })
+      .status(200)
+      .json({ message: "Success" });
+  } else {
+    res.status(401).json({ message: "Wrong password" });
   }
 });
 
