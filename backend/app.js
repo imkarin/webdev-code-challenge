@@ -70,11 +70,7 @@ app.get("/question/:id?", async (req, res) => {
 });
 
 app.get("/questions", async (req, res) => {
-<<<<<<< HEAD
   console.log(req.cookies);
-=======
-  console.log("req.cookies", req.cookies);
->>>>>>> de15374d5d3809bf92415e8e8f9ccee2ea980955
   const allQuestions = await getAllDocuments();
 
   const responseObject = {
@@ -131,7 +127,6 @@ app.post("/login", async (req, res) => {
     res.status(401).json({ message: "User doesn't exist" });
     return;
   }
-<<<<<<< HEAD
   const passwordMatch = await bcrypt.compare(password, userFromDB.password);
   if (passwordMatch) {
     res.cookie("jwt", userFromDB.token, {
@@ -140,18 +135,6 @@ app.post("/login", async (req, res) => {
     });
 
     res.status(200).json({ message: "Success!" });
-=======
-
-  const passwordMatch = await bcrypt.compare(password, userFromDB.password);
-
-  if (passwordMatch) {
-    return res
-      .cookie("jwt", userFromDB.token, {
-        maxAge: 600000,
-      })
-      .status(200)
-      .json({ message: "Success" });
->>>>>>> de15374d5d3809bf92415e8e8f9ccee2ea980955
   } else {
     res.status(401).json({ message: "Wrong password" });
   }
