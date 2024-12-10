@@ -17,7 +17,9 @@ let questionsData = null;
 let questionObj = null;
 
 window.onload = async function getStoredList() {
-  const res = await fetch("http://localhost:3000/questions");
+  const res = await fetch("http://localhost:3000/questions", {
+    credentials: "include",
+  });
 
   questionsData = await res.json();
 
@@ -71,7 +73,9 @@ async function generateQuestion() {
     selectRandomId();
   }
   if (questionsData.total_amount > 0 && randomId !== null) {
-    const res = await fetch("http://localhost:3000/question/" + randomId);
+    const res = await fetch("http://localhost:3000/question/" + randomId, {
+      credentials: "include",
+    });
     questionObj = await res.json();
 
     questionH2.textContent = questionObj.question;
