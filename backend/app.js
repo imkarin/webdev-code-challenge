@@ -10,8 +10,9 @@ const cookieParser = require("cookie-parser");
 const port = 3000;
 const uri = process.env.URI;
 const tokenSignature = process.env.SECRET_PASSWORD;
-app.use(cors({ credentials: true, origin: "http://localhost:5500" }));
 
+// Middleware Configuration
+app.use(cors({ credentials: true, origin: "http://localhost:5500" }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
 app.use(cookieParser());
@@ -71,6 +72,8 @@ app.get("/question/:id?", async (req, res) => {
 
 app.get("/questions", async (req, res) => {
   console.log(req.cookies);
+  console.log(jwt.verify(req.cookies.jwt, tokenSignature));
+
   const allQuestions = await getAllDocuments();
 
   const responseObject = {
@@ -106,7 +109,6 @@ app.post("/register", async (req, res, next) => {
       await UserModel.create({
         username: username,
         password: hashedPassword,
-        token: token,
       });
 
       res.json({ message: "Registration Succesful" });
