@@ -118,9 +118,6 @@ app.put("/save-answer", async (req, res) => {
     console.error(err);
     res.status(500).send({ message: "Failed." });
   }
-  // TO DO
-  // 1. Extract the question id + answer from the req
-  // 2. Send this to the user's profile in the DB (the user's "answeredQuestions")
 });
 
 app.post("/register", async (req, res, next) => {

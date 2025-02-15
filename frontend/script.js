@@ -84,11 +84,10 @@ async function submitAnswer() {
     credentials: "include",
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(answeredQuestion), // TO DO add answered question object, something like { id: the question id, answer: "bla"}
+    body: JSON.stringify(answeredQuestion),
   });
   const json = await saveToBackendRes.json();
 
-  // Show all the answered questions in a list on the page, we'll do this later (TO DO):
   ul.innerHTML = " ";
   questionH2.textContent = " Click the button for a new question ";
   submitBtn.disabled = true;
