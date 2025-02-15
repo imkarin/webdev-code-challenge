@@ -78,46 +78,35 @@ async function submitAnswer() {
     id: questionObj._id,
     answer: answer,
   };
+  console.log(answeredQuestion);
 
   const saveToBackendRes = await fetch("http://localhost:3000/save-answer", {
+    credentials: "include",
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(answeredQuestion), // TO DO add answered question object, something like { id: the question id, answer: "bla"}
   });
+  const json = await saveToBackendRes.json();
 
   // Show all the answered questions in a list on the page, we'll do this later (TO DO):
-  // latestLocalStorage.push(answeredQuestion);
-  // ul.innerHTML = " ";
-  // questionH2.textContent = " Click the button for a new question ";
-  // submitBtn.disabled = true;
-  // generateBtn.disabled = false;
-  // answerField.disabled = true;
-  // answerField.value = " ";
+  ul.innerHTML = " ";
+  questionH2.textContent = " Click the button for a new question ";
+  submitBtn.disabled = true;
+  generateBtn.disabled = false;
+  answerField.disabled = true;
+  answerField.value = " ";
 
-  // for (let i = 0; i < latestLocalStorage.length; i++) {
-  //   const li = document.createElement("li"); // create DOM element
+  for (let i = 0; i < json.updatedAnswers.length; i++) {
+    const li = document.createElement("li"); // create DOM element
 
-  //   const header = document.createElement("h4"); // create DOM element
-  //   header.textContent = latestLocalStorage[i].question; // provide value to Variable
+    const header = document.createElement("h4"); // create DOM element
+    header.textContent = json.updatedAnswers[i].question; // provide value to Variable
 
-  //   const paragraph = document.createElement("p"); // create DOM element
-  //   paragraph.textContent = latestLocalStorage[i].answer; // provide value to variable
+    const paragraph = document.createElement("p"); // create DOM element
+    paragraph.textContent = json.updatedAnswers[i].answer; // provide value to variable
 
-  //   li.appendChild(header); // make h4 a child to li
-  //   li.appendChild(paragraph); // make p a child to li
-  //   ul.appendChild(li); // make li a child to ul
-  // }
-
-  // const jsonAnsweredQuestions = JSON.stringify(latestLocalStorage);
-  // localStorage.setItem("answeredQuestions", jsonAnsweredQuestions);
+    li.appendChild(header); // make h4 a child to li
+    li.appendChild(paragraph); // make p a child to li
+    ul.appendChild(li); // make li a child to ul
+  }
 }
-<<<<<<< HEAD
-
-// TO-DO ✔
-
-// Instead of getting your questions from a hardcoded array, you'll now be fetching them from an external API.
-
-// Add the question's ID and answer string to the user collection.
-// Use the jwt token cookie to show the user's data on the homepage.
-=======
->>>>>>> 71f25c23f7042711cdc27589adf054f317034c8b

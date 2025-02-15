@@ -92,31 +92,36 @@ app.get("/question", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-app.get("/questions", async (req, res) => {
-  console.log(req.cookies);
-  console.log(jwt.verify(req.cookies.jwt, tokenSignature));
-
-  const allQuestions = await getAllDocuments();
-=======
-// Save answer to question
-app.put("/save-answer", async (req, res) => {
-  // TO DO
-  // 1. Extract the question id + answer from the req
-  // 2. Send this to the user's profile in the DB (the user's "answeredQuestions")
->>>>>>> 71f25c23f7042711cdc27589adf054f317034c8b
-
-  res.send({ message: "Saved" });
-});
-
 // USER REGISTRATION
 const UserSchema = mongoose.Schema({
   username: { type: String, required: true },
   password: { type: String, required: true },
-  token: { type: String, required: true },
+  answers: { type: Array, required: true, default: [] },
 });
 
 const UserModel = mongoose.model("User", UserSchema);
+
+// Save answer to question
+app.put("/save-answer", async (req, res) => {
+  const username = jwt.verify(req.cookies.jwt, tokenSignature).username;
+  try {
+    const dbRes = await UserModel.findOneAndUpdate(
+      { username: username },
+      { $push: { answers: req.body } },
+      { new: true }
+    );
+
+    if (dbRes) {
+      res.send({ message: "Saved", updatedAnswers: dbRes.answers });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Failed." });
+  }
+  // TO DO
+  // 1. Extract the question id + answer from the req
+  // 2. Send this to the user's profile in the DB (the user's "answeredQuestions")
+});
 
 app.post("/register", async (req, res, next) => {
   const { username, password } = req.body;
@@ -155,7 +160,13 @@ app.post("/login", async (req, res) => {
   }
   const passwordMatch = await bcrypt.compare(password, userFromDB.password);
   if (passwordMatch) {
-    res.cookie("jwt", userFromDB.token, {
+    const token = jwt.sign(
+      {
+        username: userFromDB.username,
+      },
+      tokenSignature
+    );
+    res.cookie("jwt", token, {
       MaxAge: 60000,
       httpOnly: true,
     });
