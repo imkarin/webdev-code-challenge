@@ -70,7 +70,12 @@ app.get("/question/:id?", async (req, res) => {
 });
 
 app.get("/questions", async (req, res) => {
-  console.log(req.cookies);
+  // If no jwt token cookie, send redirect-to-login-page response:
+  if (!req.cookies || !req.cookies.jwt) {
+    return res.status(401).json({ message: "Not logged in" });
+  }
+
+  // Otherwise, get questions from database and send those to FE:
   const allQuestions = await getAllDocuments();
 
   const responseObject = {
@@ -81,8 +86,7 @@ app.get("/questions", async (req, res) => {
   res.send(responseObject);
 });
 
-// USER REGISTER DATA STUFF
-
+// USER REGISTRATION
 const UserSchema = mongoose.Schema({
   username: { type: String, required: true },
   password: { type: String, required: true },
@@ -117,7 +121,7 @@ app.post("/register", async (req, res, next) => {
   }
 });
 
-// USER LOGIN DATA STUFF
+// USER LOGIN
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const userFromDB = await UserModel.findOne({ username: username });

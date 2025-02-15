@@ -21,6 +21,11 @@ window.onload = async function getStoredList() {
     credentials: "include",
   });
 
+  // If we get a 401 response (not logged in), redirect to login page
+  if (res.status === 401) {
+    return window.location.replace("./login.html");
+  }
+
   questionsData = await res.json();
 
   const initialLocalStorage = JSON.parse(
