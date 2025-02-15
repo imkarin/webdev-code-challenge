@@ -53,22 +53,7 @@ async function getAllDocuments() {
   }
 }
 
-app.get("/question/:id?", async (req, res) => {
-  const questionId = req.params.id;
-
-  if (questionId === undefined) {
-    res.status(404).send("Please provide an id");
-  }
-
-  const question = await QuestionModel.findById(questionId);
-
-  if (question === undefined) {
-    res.status(404).send("No question found with id: " + questionId);
-  } else {
-    res.send(question);
-  }
-});
-
+// Get all questions
 app.get("/questions", async (req, res) => {
   // If no jwt token cookie, send redirect-to-login-page response:
   if (!req.cookies || !req.cookies.jwt) {
@@ -78,12 +63,41 @@ app.get("/questions", async (req, res) => {
   // Otherwise, get questions from database and send those to FE:
   const allQuestions = await getAllDocuments();
 
+  const userAnsweredQuestionsFromDB = []; // TO DO get this from the user schema in the DB
+  // So something like: = await UserModel.findOne(...user id here...).answeredQuestions
+
   const responseObject = {
     last_updated: new Date("2024-10-10"),
     total_amount: allQuestions.length,
-    questions: allQuestions,
+    answeredQuestions: userAnsweredQuestionsFromDB,
   };
   res.send(responseObject);
+});
+
+// Get single question
+app.get("/question", async (req, res) => {
+  // We no longer receive a random ID from the FE here.
+  // TO DO Instead, we will:
+  // 1. Check the user's answered questions in the DB, take those ids
+  // 2. Find a new question in the DB, exclude these^ ids
+
+  // Right now, this always returns the same question:
+  const question = await QuestionModel.findOne();
+
+  if (question === undefined) {
+    res.status(404).send("No question found");
+  } else {
+    res.send(question);
+  }
+});
+
+// Save answer to question
+app.put("/save-answer", async (req, res) => {
+  // TO DO
+  // 1. Extract the question id + answer from the req
+  // 2. Send this to the user's profile in the DB (the user's "answeredQuestions")
+
+  res.send({ message: "Saved" });
 });
 
 // USER REGISTRATION
