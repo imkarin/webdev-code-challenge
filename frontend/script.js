@@ -29,23 +29,20 @@ window.onload = async function getStoredList() {
   const answeredQuestions = questionsData.answeredQuestions;
 
   if (answeredQuestions !== null) {
-    answeredQuestions.forEach((answeredQuestion) => {
-      // check questions in inital database and cross reference with localstorage then splice them out
-      previouslyAnsweredIds.push(answeredQuestion.id);
-
-      // Copies code from submit for loop
+    // THIS CODE WAS MOVED HERE
+    for (let i = 0; i < json.updatedAnswers.length; i++) {
       const li = document.createElement("li"); // create DOM element
 
       const header = document.createElement("h4"); // create DOM element
-      header.textContent = answeredQuestion.question; // provide value to Variable
+      header.textContent = json.updatedAnswers[i].question; // provide value to Variable
 
       const paragraph = document.createElement("p"); // create DOM element
-      paragraph.textContent = answeredQuestion.answer; // provide value to variable
+      paragraph.textContent = json.updatedAnswers[i].answer; // provide value to variable
 
       li.appendChild(header); // make h4 a child to li
       li.appendChild(paragraph); // make p a child to li
       ul.appendChild(li); // make li a child to ul
-    });
+    }
   }
 };
 
@@ -95,17 +92,18 @@ async function submitAnswer() {
   answerField.disabled = true;
   answerField.value = " ";
 
-  for (let i = 0; i < json.updatedAnswers.length; i++) {
-    const li = document.createElement("li"); // create DOM element
+  // MOVED THIS TO LINE 32
+  // for (let i = 0; i < json.updatedAnswers.length; i++) {
+  //   const li = document.createElement("li"); // create DOM element
 
-    const header = document.createElement("h4"); // create DOM element
-    header.textContent = json.updatedAnswers[i].question; // provide value to Variable
+  //   const header = document.createElement("h4"); // create DOM element
+  //   header.textContent = json.updatedAnswers[i].question; // provide value to Variable
 
-    const paragraph = document.createElement("p"); // create DOM element
-    paragraph.textContent = json.updatedAnswers[i].answer; // provide value to variable
+  //   const paragraph = document.createElement("p"); // create DOM element
+  //   paragraph.textContent = json.updatedAnswers[i].answer; // provide value to variable
 
-    li.appendChild(header); // make h4 a child to li
-    li.appendChild(paragraph); // make p a child to li
-    ul.appendChild(li); // make li a child to ul
-  }
+  //   li.appendChild(header); // make h4 a child to li
+  //   li.appendChild(paragraph); // make p a child to li
+  //   ul.appendChild(li); // make li a child to ul
+  // }
 }
