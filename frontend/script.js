@@ -29,7 +29,15 @@ window.onload = async function getStoredList() {
   const answeredQuestions = questionsData.answeredQuestions;
 
   if (answeredQuestions !== null) {
+    const displayAnswers = await fetch("http://localhost:3000/save-answer", {
+      credentials: "include",
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(answeredQuestion),
+    });
+    const json = await displayAnswers.json();
     // THIS CODE WAS MOVED HERE
+    console.log(answeredQuestions);
     for (let i = 0; i < json.updatedAnswers.length; i++) {
       const li = document.createElement("li"); // create DOM element
 
@@ -93,17 +101,17 @@ async function submitAnswer() {
   answerField.value = " ";
 
   // MOVED THIS TO LINE 32
-  // for (let i = 0; i < json.updatedAnswers.length; i++) {
-  //   const li = document.createElement("li"); // create DOM element
+  for (let i = 0; i < json.updatedAnswers.length; i++) {
+    const li = document.createElement("li"); // create DOM element
 
-  //   const header = document.createElement("h4"); // create DOM element
-  //   header.textContent = json.updatedAnswers[i].question; // provide value to Variable
+    const header = document.createElement("h4"); // create DOM element
+    header.textContent = json.updatedAnswers[i].question; // provide value to Variable
 
-  //   const paragraph = document.createElement("p"); // create DOM element
-  //   paragraph.textContent = json.updatedAnswers[i].answer; // provide value to variable
+    const paragraph = document.createElement("p"); // create DOM element
+    paragraph.textContent = json.updatedAnswers[i].answer; // provide value to variable
 
-  //   li.appendChild(header); // make h4 a child to li
-  //   li.appendChild(paragraph); // make p a child to li
-  //   ul.appendChild(li); // make li a child to ul
-  // }
+    li.appendChild(header); // make h4 a child to li
+    li.appendChild(paragraph); // make p a child to li
+    ul.appendChild(li); // make li a child to ul
+  }
 }
