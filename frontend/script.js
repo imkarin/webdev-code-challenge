@@ -24,8 +24,20 @@ window.onload = async function getStoredList() {
     return window.location.replace("./login.html");
   }
 
-  questionsData = await res.json();
+  // Clone the response to read the body twice
+  const clonedResponse = res.clone();
 
+  // Parse the original response
+  const questionObj = await res.json();
+
+  const answer = answerField.value;
+  const answeredQuestion = {
+    id: questionObj._id,
+    answer: answer,
+  };
+
+  // Parse the cloned response
+  const questionsData = await clonedResponse.json();
   const answeredQuestions = questionsData.answeredQuestions;
 
   if (answeredQuestions !== null) {
@@ -36,8 +48,9 @@ window.onload = async function getStoredList() {
       body: JSON.stringify(answeredQuestion),
     });
     const json = await displayAnswers.json();
+    console.log(json);
+
     // THIS CODE WAS MOVED HERE
-    console.log(answeredQuestions);
     for (let i = 0; i < json.updatedAnswers.length; i++) {
       const li = document.createElement("li"); // create DOM element
 
